@@ -5,7 +5,7 @@ import {createStore} from "redux";
 import {Provider} from "react-redux";
 import rootReducer from "./modules";
 import {ThemeProvider} from "styled-components";
-import {whiteTheme} from "./modules/theme";
+import {whiteTheme} from "./theme";
 const store = createStore(rootReducer);
 
 ReactDOM.render(
