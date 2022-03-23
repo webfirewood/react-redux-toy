@@ -13,6 +13,7 @@ function ToDo () {
     };
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        if(value  === '') return;
         updateTodo(value);
         setValue('');
     }

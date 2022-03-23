@@ -14,7 +14,8 @@ const todo = createReducer<Todo,TodoAction>(initState, {
         }),
     [DELETE_TODO] : (state, action) =>
         produce(state, draft => {
-        draft.todo.pop()
+            const index = draft.todo.findIndex(item => item.id === action.payload.id);
+            draft.todo.splice(index, 1);
         })
 })
 
