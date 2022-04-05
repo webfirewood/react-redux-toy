@@ -3,10 +3,12 @@ import { RootState } from '../modules';
 import styled from 'styled-components';
 import { BsTrash, FiEdit } from 'react-icons/all';
 import { IToDo } from '../modules/todo/types';
-import { deleteTodo } from '../modules/todo/actions';
-import React from 'react';
+import { deleteTodo, updateTodo } from '../modules/todo/actions';
+import React, { FormHTMLAttributes, useState } from 'react';
 
-const ToDoWrapper = styled.div`
+const ToDoWrapper = styled.div``;
+
+const ToDoItem = styled.div`
     display: flex;
     justify-content: space-between;
     border: 1px solid;
@@ -23,24 +25,36 @@ const ButtonWrapper = styled.div`
 `;
 
 function ToDoList() {
-    let todoList = useSelector((state: RootState) => state.todo.todo);
+    const todoList = useSelector((state: RootState) => state.todo.todo);
+    const [todoValue, setTodoValue] = useState('');
     const dispatch = useDispatch();
     const onRemove = (item: IToDo) => {
         dispatch(deleteTodo(item));
     };
+    const onModify = (item: IToDo) => {
+        const newItem: IToDo = { ...item };
+        if (todoValue !== '') {
+            newItem.todo = todoValue;
+            setTodoValue('');
+        }
+        dispatch(updateTodo(newItem));
+    };
+    const onChangeTodo = (e: React.ChangeEvent<HTMLInputElement>, item: IToDo) => {
+        setTodoValue(e.target.value);
+    };
 
     return (
-        <>
+        <ToDoWrapper>
             {todoList.map(item => (
-                <ToDoWrapper key={item.id}>
-                    {item.todo}
+                <ToDoItem key={item.id}>
+                    {item.isModify ? <input type="text" defaultValue={item.todo} onChange={e => onChangeTodo(e, item)} /> : item.todo}
                     <ButtonWrapper>
-                        <FiEdit onClick={() => onRemove(item)} />
+                        <FiEdit onClick={() => onModify(item)} />
                         <BsTrash onClick={() => onRemove(item)} />
                     </ButtonWrapper>
-                </ToDoWrapper>
+                </ToDoItem>
             ))}
-        </>
+        </ToDoWrapper>
     );
 }
 export default ToDoList;
